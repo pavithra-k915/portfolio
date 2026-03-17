@@ -38,10 +38,10 @@
 .resume-document {
   max-width: 900px;
   margin: 0 auto;
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(24, 24, 27, 0.7);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radius-xl);
   padding: 60px;
   box-shadow: 
@@ -235,9 +235,9 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--color-text);
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.05);
   border-radius: var(--radius-sm);
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--color-border);
 }
 
 .career-pill {
