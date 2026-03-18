@@ -244,4 +244,133 @@
   `;
   document.head.appendChild(style);
 
+  // ============================================================
+  // 9. DIGITAL BACKGROUND PARTICLE SYSTEM
+  // ============================================================
+  function initDigitalCanvas() {
+    const canvas = document.getElementById('canvas-bg');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    
+    let w, h;
+    let particles = [];
+    
+    const mouse = {
+      x: null,
+      y: null,
+      radius: 120
+    };
+    
+    window.addEventListener('mousemove', function(event) {
+      mouse.x = event.x;
+      mouse.y = event.y;
+    });
+
+    window.addEventListener('mouseout', function() {
+      mouse.x = undefined;
+      mouse.y = undefined;
+    });
+    
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      init();
+    }
+    
+    window.addEventListener('resize', resize);
+    
+    class Particle {
+      constructor() {
+        this.x = Math.random() * w;
+        this.y = Math.random() * h;
+        this.size = Math.random() * 2 + 0.5;
+        this.baseX = this.x;
+        this.baseY = this.y;
+        this.density = (Math.random() * 20) + 1;
+        this.vx = (Math.random() - 0.5) * 1.2;
+        this.vy = (Math.random() - 0.5) * 1.2;
+      }
+      
+      update() {
+        this.x += this.vx;
+        this.y += this.vy;
+
+        if (this.x < 0 || this.x > w) this.vx = -this.vx;
+        if (this.y < 0 || this.y > h) this.vy = -this.vy;
+
+        let dx = mouse.x - this.x;
+        let dy = mouse.y - this.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        let forceDirectionX = dx / distance;
+        let forceDirectionY = dy / distance;
+        let maxDistance = mouse.radius;
+        let force = (maxDistance - distance) / maxDistance;
+        let directionX = forceDirectionX * force * this.density;
+        let directionY = forceDirectionY * force * this.density;
+        
+        if (distance < mouse.radius && mouse.x !== undefined) {
+          this.x -= directionX;
+          this.y -= directionY;
+        }
+      }
+      
+      draw() {
+        ctx.fillStyle = 'rgba(59, 130, 246, 0.8)';
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = 'rgba(59, 130, 246, 0.5)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+    
+    function init() {
+      particles = [];
+      let numberOfParticles = (w * h) / 7000;
+      for (let i = 0; i < numberOfParticles; i++) {
+        particles.push(new Particle());
+      }
+    }
+    
+    function connect() {
+      for (let a = 0; a < particles.length; a++) {
+        for (let b = a; b < particles.length; b++) {
+          let dx = particles[a].x - particles[b].x;
+          let dy = particles[a].y - particles[b].y;
+          let distance = dx * dx + dy * dy;
+          if (distance < (w/12) * (h/12)) {
+            let opacityValue = 1 - (distance / 15000);
+            if (opacityValue > 0) {
+              ctx.strokeStyle = 'rgba(59, 130, 246,' + opacityValue * 0.3 + ')';
+              ctx.lineWidth = 1;
+              ctx.beginPath();
+              ctx.moveTo(particles[a].x, particles[a].y);
+              ctx.lineTo(particles[b].x, particles[b].y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+    }
+    
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
+      connect();
+      requestAnimationFrame(animate);
+    }
+    
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    init();
+    animate();
+  }
+  
+  initDigitalCanvas();
+
 })();

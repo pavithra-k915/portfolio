@@ -6,9 +6,9 @@
 /* ── CSS Custom Properties ── */
 :root {
   /* Colors */
-  --color-bg:         #0a0a0a;
-  --color-bg-alt:     #121212;
-  --color-bg-card:    #18181b;
+  --color-bg:         rgba(10, 10, 10, 0.3);
+  --color-bg-alt:     rgba(18, 18, 18, 0.4);
+  --color-bg-card:    rgba(24, 24, 27, 0.85);
   --color-text:       #f8fafc;
   --color-text-muted: #a1a1aa;
   --color-text-light: #71717a;
@@ -77,8 +77,18 @@ body {
   font-size: 16px;
   line-height: 1.7;
   color: var(--color-text);
-  background-color: var(--color-bg);
+  background-color: #0a0a0a;
   overflow-x: hidden;
+}
+
+#canvas-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
 }
 
 img { max-width: 100%; display: block; }
